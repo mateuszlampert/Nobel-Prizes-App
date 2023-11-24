@@ -1,5 +1,4 @@
 'use client';
-import './globals.css'
 import data from './data/prizes.json';
 import { useState } from 'react';
 import {FormControl, InputLabel, Select, MenuItem, Box, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material'
