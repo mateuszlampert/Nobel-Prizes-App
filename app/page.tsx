@@ -1,53 +1,58 @@
 'use client';
 import data from './data/prizes.json';
 import { useState } from 'react';
-import {FormControl, InputLabel, Select, MenuItem, Box, ButtonGroup, ToggleButtonGroup, ToggleButton} from '@mui/material'
-import Button from '@mui/material-next/Button';
-import '@fontsource/roboto';
+import { FormControl, InputLabel, Select, MenuItem, Box, ButtonGroup, ToggleButtonGroup, ToggleButton, Button, Container, Stack, Typography } from '@mui/material';
 import Flag from 'react-world-flags';
+import styles from '@/app/styles.module.css';
+import SearchButton from '@/app/components/SearchButton.tsx'
 
-let years: Set<string> = new Set(data.nobelPrizes.map(el => el.awardYear));
-let uniqueYears: string[] = [...years]
+
+const years: Set<string> = new Set(data.nobelPrizes.map(el => el.awardYear));
+const uniqueYears: string[] = [...years]
+
 
 export default function Home() {
-  const [yearToShow , setYearToShow] = useState('1900')
+  const [yearToShow, setYearToShow] = useState('1900')
   const [language, setLanguage] = useState('en')
   const [disabled, setDisabled] = useState(true)
 
   return (
-    <div style={{display: 'flex', width: '50%', alignItems: 'center', justifyContent: 'center', margin: '10% auto', flexDirection: 'column'}}>
-    
-      <FormControl fullWidth style={{padding:'20px'}}>
-        <InputLabel id="year-select-label">Year</InputLabel>        
-        <Select
-          labelId="year-select"
-          id="year-select"
-          value={yearToShow}
-          label="Year"
-          onChange={e => {setYearToShow(e.target.value), setDisabled(false)}}
-        >
-          {uniqueYears.map((e, id) => <MenuItem key={id} value={e}>{e}</MenuItem>)}
-        </Select>
-      </FormControl>
+    <div className={styles.page}>
+      <Container maxWidth='sm'>
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Typography variant="subtitle1" display="block" gutterBottom align='center'>
+            Select year and language you are interested in:
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel id="year-select-label">Year</InputLabel>
+            <Select
+              labelId="year-select"
+              id="year-select"
+              value={yearToShow}
+              label="Year"
+              onChange={e => { setYearToShow(e.target.value), setDisabled(false) }}
+            >
+              {uniqueYears.map((e, id) => <MenuItem key={id} value={e}>{e}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="year-select-label">Year</InputLabel>
+            <Select
+              labelId="language-select"
+              id="language-select"
+              value={language}
+              label="Language"
+              onChange={e => { setLanguage(e.target.value) }}
+            >
+              <MenuItem value={'en'}>English&nbsp;<Flag code='GB' height='16' /></MenuItem>
+              <MenuItem value={'se'}>Swedish&nbsp;<Flag code='SE' height='16' /></MenuItem>
+              <MenuItem value={'no'}>Norwegian&nbsp;<Flag code='NO' height='16' /></MenuItem>
+            </Select>
+          </FormControl>
 
-      <div style={{padding:'20px', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'content'}}>
-        <ToggleButtonGroup   color="primary"
-        value={language}
-        exclusive
-        onChange={(e, newAlignment) => {if(newAlignment != null) setLanguage(newAlignment)}}
-        aria-label="Platform" >
-          <ToggleButton value='en'><Flag code='GB' height="16px" /></ToggleButton>
-          <ToggleButton value='no'><Flag code='NO' height="16px" /></ToggleButton>
-          <ToggleButton value='se'><Flag code='SE' height="16px" /></ToggleButton>
-        </ToggleButtonGroup>
-      </div>
-
-
-      <SearchButton disabled={disabled} yearToShow={yearToShow} />
+          <SearchButton disabled={disabled} yearToShow={yearToShow} lang={language} />
+        </Stack>
+      </Container>
     </div>
   )
-}
-
-function SearchButton(props: {disabled : boolean, yearToShow: string}){
-  return props.disabled ? <Button variant='outlined' color='primary' disabled>SEARCH</Button> : <Button variant='outlined' color='primary' href={`/prizes/${props.yearToShow}`}>SEARCH</Button>;
 }
